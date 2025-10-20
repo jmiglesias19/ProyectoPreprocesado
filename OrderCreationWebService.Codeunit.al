@@ -7,9 +7,11 @@ codeunit 50100 "Order Creation WebService"
     procedure CreateThisOrder(CustomerNo: Code[20]; ItemNo: Code[20])
     var
         SalesHeader: Record "Sales Header";
+        ReleaseSalesDocument: Codeunit "Release Sales Document";
     begin
         CreateSalesHeader(SalesHeader, CustomerNo);
         CreateSalesLine(SalesHeader, ItemNo);
+        ReleaseSalesDocument.PerformManualRelease(SalesHeader); //esto hace que al crear una nueva orden, ya que esta en el procedimiento CreateThisOrder, el campo de Status se ponga en Released solo
     end;
 
     local procedure CreateSalesHeader(var SalesHeader: Record "Sales Header"; CustomerNo: Code[20])
@@ -42,9 +44,9 @@ codeunit 50100 "Order Creation WebService"
     procedure IncomingOrders()
     begin
         CreateThisOrder('10000', '1000');
-        CreateThisOrder('20000', '1900');
-        CreateThisOrder('01905899', '80013');
-        CreateThisOrder('01905902', '80216-T');
+        // CreateThisOrder('20000', '1900');
+        // CreateThisOrder('01905899', '80013');
+        // CreateThisOrder('01905902', '80216-T');
     end;
 
 }
