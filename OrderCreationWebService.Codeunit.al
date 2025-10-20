@@ -7,11 +7,15 @@ codeunit 50100 "Order Creation WebService"
     procedure CreateThisOrder(CustomerNo: Code[20]; ItemNo: Code[20])
     var
         SalesHeader: Record "Sales Header";
+#if ReleaseAfterCreation
         ReleaseSalesDocument: Codeunit "Release Sales Document";
+#endif
     begin
         CreateSalesHeader(SalesHeader, CustomerNo);
         CreateSalesLine(SalesHeader, ItemNo);
+#if ReleaseAfterCreation
         ReleaseSalesDocument.PerformManualRelease(SalesHeader);
+#endif
     end;
 
     local procedure CreateSalesHeader(var SalesHeader: Record "Sales Header"; CustomerNo: Code[20])
@@ -21,7 +25,11 @@ codeunit 50100 "Order Creation WebService"
         SalesHeader.Insert(true);
 
         SalesHeader.Validate("Sell-to Customer No.", CustomerNo);
+#if ReleaseAfterCreation
         SalesHeader.Validate("External Document No.", 'WebService2');
+#else
+        SalesHeader.Validate("External Document No.", 'WebService');
+#endif
         SalesHeader.Validate("Order Date", Today());
         SalesHeader.Modify(true);
     end;

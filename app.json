@@ -29,5 +29,6 @@
   "features": [
     "NoImplicitWith",
     "TranslationFile"
-  ]
+  ],
+  "preprocessorSymbols": ["ReleaseAfterCreation"]
 }
